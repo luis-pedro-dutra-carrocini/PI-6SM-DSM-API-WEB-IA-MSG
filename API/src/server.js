@@ -46,6 +46,8 @@ const atividadeChamadoRouter = require('./routes/atividadeChamadoRouter');
 const solicitacaoRouter = require('./routes/solicitacaoRouter');
 const atividadeSolicitacaoRouter = require('./routes/atividadeSolicitacaoRouter');
 const historicoChamadoRouter = require('./routes/historicoChamadoRouter');
+const mineracaoRoutes = require('./routes/mineracaoRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 app.use('/api/admin', adminRouter);
 app.use('/api/unidade', unidadeRouter);
@@ -60,6 +62,8 @@ app.use('/api/atividadechamado', atividadeChamadoRouter);
 app.use('/api/solicitacao', solicitacaoRouter);
 app.use('/api/atividadesolicitacao', atividadeSolicitacaoRouter);
 app.use('/api/historicochamado', historicoChamadoRouter);
+app.use('/api/mineracao', mineracaoRoutes);
+app.use('/api/auth', authRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
