@@ -294,8 +294,8 @@ class ChamadoController {
                         dadosAtualizacao.ChamadoDescricaoFormatada = '' // Limpar descrição formatada que antes estava com o motivo da recusa
                     }
 
-                    // Set status for FALTAINFORMACAO, volta para PROCESSAMENTO para nova análise
-                    if (chamadoExistente.ChamadoStatus === 'FALTAINFORMACAO') {
+                    // Set status for FALTAINFORMACAO ou PENDENTE, volta para PROCESSAMENTO para nova análise
+                    if (chamadoExistente.ChamadoStatus === 'FALTAINFORMACAO' || chamadoExistente.ChamadoStatus === 'PENDENTE') {
                         dadosAtualizacao.ChamadoStatus = 'PROCESSAMENTO';
                     }
                 }
