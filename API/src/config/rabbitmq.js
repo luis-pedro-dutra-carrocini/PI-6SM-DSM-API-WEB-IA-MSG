@@ -10,6 +10,7 @@ class RabbitMQConfig {
     this.reconnectAttempts = 0;
     this.maxReconnectAttempts = 5;
     this.reconnectDelay = 5000;
+    this.consumerConfigs = new Map(); // fila -> { callback, prefetch }
   }
 
   async connect() {
@@ -17,7 +18,9 @@ class RabbitMQConfig {
       const url = process.env.RABBITMQ_URL || 'amqp://localhost:5672';
       console.log(`🔌 Conectando ao RabbitMQ em ${url}...`);
 
-      this.connection = await amqp.connect(url);
+      this.connection = await amqp.connect(url, {
+        heartbeat: 60, // heartbeat de 60s para detectar conexões mortas
+      });
       this.channel = await this.connection.createChannel();
 
       await this.setupQueues();
@@ -47,13 +50,7 @@ class RabbitMQConfig {
   }
 
   async setupQueues() {
-    await this.channel.assertQueue('classificacao_chamados', {
-      durable: true,
-      arguments: {
-        'x-message-ttl': 60000,
-        'x-max-retries': 3
-      }
-    });
+    await this.channel.assertQueue('classificacao_chamados', { durable: true });
 
     await this.channel.assertQueue('mineracao_execucoes', { durable: true });
 
@@ -76,6 +73,10 @@ class RabbitMQConfig {
     setTimeout(async () => {
       try {
         await this.connect();
+        // Após reconectar, re-registra todos os consumidores salvos
+        for (const [queue, config] of this.consumerConfigs) {
+          await this.consume(queue, config.callback, config.prefetch);
+        }
       } catch (error) {
         console.error('❌ Falha na reconexão:', error);
         this.reconnect();
@@ -111,6 +112,10 @@ class RabbitMQConfig {
    * um erro em uma fila derrube o consumidor de outra.
    */
   async consume(queue, callback, prefetch = 1) {
+
+    // Salva a configuração para reuso na reconexão
+    this.consumerConfigs.set(queue, { callback, prefetch });
+
     if (!this.isConnected) {
       await this.connect();
     }

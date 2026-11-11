@@ -131,7 +131,7 @@ class AuthController {
     try {
       const { refreshToken } = req.body;
 
-      console.log('Chegouuuuuuuuuuuuuuuuuuuuuuu');
+      //console.log('Chegouuuuuuuuuuuuuuuuuuuuuuu');
 
       if (!refreshToken || typeof refreshToken !== 'string') {
         return res.status(400).json({ error: 'Refresh token é obrigatório' });
@@ -228,7 +228,7 @@ class AuthController {
 
       const novoAccessToken = gerarAccessToken(payload);
 
-      console.log('Tudo certo kkkkkkkkkkkkkkkkkkkkkkkk');
+      //console.log('Tudo certo kkkkkkkkkkkkkkkkkkkkkkkk');
       return res.status(200).json({
         data: {
           token: novoAccessToken,

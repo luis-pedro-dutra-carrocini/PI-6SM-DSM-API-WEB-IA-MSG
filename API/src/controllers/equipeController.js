@@ -293,7 +293,7 @@ class EquipeController {
                 status,
                 nome,
                 pagina = 1,
-                limite = 10
+                limite = 100
             } = req.query;
 
             const usuarioLogado = req.usuario;

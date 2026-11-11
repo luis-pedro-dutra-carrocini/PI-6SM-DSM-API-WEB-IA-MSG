@@ -274,7 +274,7 @@ class ChamadoController {
                 }
 
                 // Caso o status já não seja mais pendentes, não se pode alterar
-                if (chamadoExistente.ChamadoStatus !== 'PENDENTE' && chamadoExistente.ChamadoStatus !== 'FALTAINFORMACAO') {
+                if (chamadoExistente.ChamadoStatus !== 'PENDENTE' && chamadoExistente.ChamadoStatus !== 'FALTAINFORMACAO' && chamadoExistente.ChamadoStatus !== 'PROCESSAMENTO') {
                     return res.status(403).json({
                         error: 'Chamado já não está mais pendente, não permitido alterar.'
                     })
